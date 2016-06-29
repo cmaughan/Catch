@@ -24,9 +24,6 @@ namespace Catch {
     struct LexSort {
         bool operator() (TestCase i,TestCase j) const { return (i<j);}
     };
-    struct RandomNumberGenerator {
-        int operator()( int n ) const { return std::rand() % n; }
-    };
 
     inline std::vector<TestCase> sortTests( IConfig const& config, std::vector<TestCase> const& unsortedTestCases ) {
 
@@ -40,8 +37,9 @@ namespace Catch {
                 {
                     seedRng( config );
 
-                    RandomNumberGenerator rng;
-                    std::random_shuffle( sorted.begin(), sorted.end(), rng );
+                    std::random_device rng;
+                    std::mt19937 urng(rng());
+                    std::shuffle( sorted.begin(), sorted.end(), rng );
                 }
                 break;
             case RunTests::InDeclarationOrder:
